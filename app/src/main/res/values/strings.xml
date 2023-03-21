@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">BtcWallet</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="fr_balance"> Balance</string>
+    <string name="fr_success">Your funds have been sent!</string>
+
+    <string name="bt_send_label">Send</string>
+    <string name="bt_send_more">Send more</string>
+
+    <string name="previous">prev</string>
+
+
+    <string name="hint_amount">Amount to send</string>
+    <string name="hint_address">Address to send</string>
+    <string name="suffix">BTC</string>
+
+    <string name="test_addr">tb1qgpzvt3xaxm4wn3wsk4qx09z7qv2aqqaxkgzyva</string>
+    <string name="tv_success">" Your transaction ID is"</string>
+    <string name="hint_tr_id">Clic to go BlockStream Explorer</string>
+
+
+</resources>

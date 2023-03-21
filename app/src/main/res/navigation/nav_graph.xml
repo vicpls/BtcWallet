@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/BalanceFragment">
+
+    <fragment
+        android:id="@+id/BalanceFragment"
+        android:name="com.exmpl.btcwallet.ui.BalanceFragment"
+        android:label="@string/fr_balance"
+        tools:layout="@layout/balance_fragment">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SuccessFragment"
+        android:name="com.exmpl.btcwallet.ui.SuccessFragment"
+        android:label="@string/fr_success"
+        tools:layout="@layout/success_fragment">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/BalanceFragment" />
+    </fragment>
+</navigation>
