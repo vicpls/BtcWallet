@@ -1,5 +1,6 @@
 package com.exmpl.btcwallet.repo
 
+import com.exmpl.btcwallet.repo.localstore.PrefStore
 import com.exmpl.btcwallet.repo.testapi.Esplora
 import dagger.Binds
 import dagger.Module

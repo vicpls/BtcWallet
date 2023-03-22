@@ -1,7 +1,7 @@
-package com.exmpl.btcwallet.repo
+package com.exmpl.btcwallet.repo.localstore
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
+import com.exmpl.btcwallet.repo.ILocalStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.bouncycastle.util.encoders.Hex
 import javax.inject.Inject
@@ -12,9 +12,10 @@ private const val FL_NAME = "btc_wal_settings"
 @Singleton
 class PrefStore
 @Inject constructor(
-    @ApplicationContext context: Context) : ILocalStore {
+    @ApplicationContext context: Context
+) : ILocalStore {
 
-    private val shPref = context.getSharedPreferences(FL_NAME, MODE_PRIVATE)
+    private val shPref = context.getSharedPreferences(FL_NAME, Context.MODE_PRIVATE)
 
     override fun put(key: String, payload: ByteArray) {
         shPref
@@ -27,4 +28,3 @@ class PrefStore
     override fun getByteArr(key: String) : ByteArray? =
         shPref.getString(key, null)?.let { Hex.decode(it) }
 }
-

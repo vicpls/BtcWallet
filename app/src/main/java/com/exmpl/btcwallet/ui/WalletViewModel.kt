@@ -1,86 +1,66 @@
 package com.exmpl.btcwallet.ui
 
-import android.content.Context
+import android.text.Html
+import android.text.Spanned
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.exmpl.btcwallet.model.*
-import com.exmpl.btcwallet.repo.PrefStore
-import com.exmpl.btcwallet.repo.testapi.Esplora
+import com.exmpl.btcwallet.model.Result
+import com.exmpl.btcwallet.model.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import org.bitcoinj.core.Address
-import org.bitcoinj.core.Coin
 import javax.inject.Inject
+
+private const val bcExpUrl = "https://blockstream.info/testnet/"
 
 @HiltViewModel
 class WalletViewModel
-@Inject constructor(useCases: UseCases) : ViewModel() {
+@Inject constructor(private val useCases: UseCases) : ViewModel() {
 
-    /*private val _balance = MutableLiveData(useCases.getBalance())
-    val balance: LiveData<String> by this::_balance*/
+    private val _balance = MutableStateFlow("-?-")
+    val balance: StateFlow<String> = _balance.asStateFlow()
 
-    private val _fbalance = MutableStateFlow("?")
-    val fbalance: StateFlow<String> = _fbalance.asStateFlow()
+    private val _trResult = MutableStateFlow<Result>(Result.NOP())
+    val trResult: StateFlow<Result> = _trResult.asStateFlow()
 
-    @Inject
-    lateinit var key : Key
+    var transactionId: String = ""
+    private set
+    var transactionFee: String = ""
+    private set
 
-    init{
+    init{ updateBalance() }
+
+    fun updateBalance(){
         viewModelScope.launch {
-            useCases.updateBalance()
-            _fbalance.emit()
+            useCases.updateBalance().collect {
+                _balance.emit(it)
+            }
         }
     }
 
-    fun send(amount: String, address: String, context: Context){
-
-        key = Key(PrefStore(context))       // todo не д\б
-        val a = runBlocking {
-            withContext(Dispatchers.IO) {
-                Wallet(key, Esplora())
-            }
+    fun send(amount: String, address: String){
+        viewModelScope.launch {
+            useCases.sendMany(amount, address)
+                .collect {
+                    if (it is Result.SUCCESS<*,*>) {
+                        transactionId = it.data.toString()
+                        transactionFee = it.data2.toString()
+                    }
+                    _trResult.emit(it)
+                }
         }
-        println(a.address.toString())
-
-
-        //------------  получить Utxo-----------------------------
-        /*runBlocking {
-            withContext(Dispatchers.IO) {
-                a.calcBalance()
-            }
-        }
-        println(a.amount.toFriendlyString())*/
-
-        //------------  получить транзакции -----------------------------
-        /*val trs = mutableListOf<Transaction>()
-        runBlocking {
-            withContext(Dispatchers.IO) {
-                val bTr = Esplora().getEsprolaTransaction(a.listUtxo[0].txid)
-                trs.add(Transaction(TestNet3Params(), bTr))
-            }
-        }*/
-
-        val tr = WTransaction(a)
-        val adr = Address.fromString(netParams,"tb1qsf0seutzvd85tc8dwr95jgx5g8xjkhpfqrwf9d")
-        tr.createSpent(Coin.ofSat(1717), adr)
-
-        println("Transaction size: ${tr.transaction.vsize}")
-
-        val txId = runBlocking {
-            withContext(Dispatchers.IO) {
-                Esplora().postTransaction(tr.transaction.toHexString())
-            }
-        }
-
-        val atx=tr.transaction.toHexString()
-
-        println(txId)
     }
+
+    fun getHtml(): Spanned {
+        val html = " <a href=\"$bcExpUrl\$transactionId\">$transactionId"
+        return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+    }
+
+    fun isSpentSumCorrect(amount: String): Boolean =
+        useCases.isSpentCorrect(amount)
+
+
 
 }

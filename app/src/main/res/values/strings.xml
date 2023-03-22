@@ -19,6 +19,10 @@
     <string name="test_addr">tb1qgpzvt3xaxm4wn3wsk4qx09z7qv2aqqaxkgzyva</string>
     <string name="tv_success">" Your transaction ID is"</string>
     <string name="hint_tr_id">Clic to go BlockStream Explorer</string>
+    <string name="tr_fee_title">Transaction fee, satoshi:</string>
+    <string name="over_limit">Amount with fee exceeds funds</string>
+    <string name="balance">Balance</string>
+    <string name="coin_name">testBTC</string>
 
 
 </resources>
