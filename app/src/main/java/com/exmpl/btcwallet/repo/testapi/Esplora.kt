@@ -46,15 +46,15 @@ class Esplora @Inject constructor() : IbtcApi{
             val request = createRequest("/fee-estimates", "")
 
             try {
-                client.newCall(request).execute().use { response ->
+                client.newCall(request).execute().let { response ->
                     if (response.isSuccessful) {
                         val result = parseFeeEstimates(response.body!!)
                         emit(result)
-                        response.close()
                         Log.d(LOG_TAG,"Response is Ok. Size of FeeRates: ${result.size}")
                     } else {
                         Log.d(LOG_TAG, "Response is not success. Code: ${response.code}, Mes: ${response.message}")
                     }
+                    response.close()
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Error to server connect while request FeeEstimates.", e);
@@ -70,13 +70,13 @@ class Esplora @Inject constructor() : IbtcApi{
             val request = createRequest("/tx/%s/raw", id)
 
             try {
-                client.newCall(request).execute().use { response ->
+                client.newCall(request).execute().let { response ->
                     if (response.isSuccessful) {
                         emit(response.body!!.bytes() )
-                        response.close()
                     } else {
                         Log.d(LOG_TAG, "Responce is not success. Code: ${response.code}")
                     }
+                    response.close()
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG,"Error to server connect while request transaction Id=$id", e);
@@ -103,14 +103,15 @@ class Esplora @Inject constructor() : IbtcApi{
                 .build()
 
             try {
-                client.newCall(request).execute().use { response ->
+                client.newCall(request).execute().let { response ->
                     if (response.isSuccessful) {
-                        emit( response.body!!.string() )
                         Log.d(LOG_TAG, "Transaction sent. Id=${response.body!!.string()}")
-                        response.close()
+                        val resp = (response.body!!.string())
+                        emit(resp)
                     } else {
                         Log.d(LOG_TAG, "Response is not success. Code: ${response.code}\n Body: ${response.body?.string()}")
                     }
+                    response.close()
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG,"Error to server connect while post transaction.", e);
@@ -133,15 +134,15 @@ class Esplora @Inject constructor() : IbtcApi{
             val request = createRequest("/address/%s/utxo", address)
 
             try {
-                client.newCall(request).execute().use { response ->
+                client.newCall(request).execute().let { response ->
                     if (response.isSuccessful) {
                         val result = parseUtxoResponse(response.body!!)
                         result.forEach { emit(it) }
-                        response.close()
                         Log.d(LOG_TAG,"Response is Ok. Q-ty UTXO: ${result.size}")
                     } else {
                         Log.d(LOG_TAG, "Response is not success. Code: ${response.code}, Mes: ${response.message}")
                     }
+                    response.close()
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Error to server connect while request utxo.", e);

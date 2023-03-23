@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.tvBalance.setOnClickListener {
+        binding.appBarLayout.setOnClickListener{
             viewModel.updateBalance()
         }
 

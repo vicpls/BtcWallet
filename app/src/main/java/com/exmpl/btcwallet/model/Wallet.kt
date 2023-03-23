@@ -16,6 +16,7 @@ class Wallet
 @Inject constructor(val key: Key, private val btcApi: IbtcApi) {
 
     val address: Address = Address.fromKey(netParams, key.ecKey, Script.ScriptType.P2WPKH)
+    //val address: Address = Address.fromKey(netParams, key.ecKey, Script.ScriptType.P2PKH)
 
     var listUtxo: List<Utxo> = emptyList()
     private set

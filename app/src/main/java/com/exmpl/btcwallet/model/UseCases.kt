@@ -1,6 +1,7 @@
 package com.exmpl.btcwallet.model
 
 import android.util.Log
+import com.exmpl.btcwallet.LOG_TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import org.bitcoinj.core.Address
@@ -41,9 +42,16 @@ class UseCases @Inject constructor(val wallet: Wallet) {
             val tx = tran.createTransaction(coin, adr, feeRate)
 
             //emit(Result.INPROCESS())
-            Log.d(com.exmpl.btcwallet.LOG_TAG, "Created transaction.")
+            Log.d(LOG_TAG, "Created transaction.")
             var txId = ""
-            wallet.sendTransaction(tx).collect{txId=it}
+            wallet.sendTransaction(tx)
+                .catch {
+                    val mes = "Server error"
+                    Log.d(LOG_TAG, mes, it)
+                    emit(Result.ERORR(mes))
+                    emit(Result.NOP())
+                }
+                .collect{txId=it}
             if (txId.isNotEmpty()) {
                 emit(Result.SUCCESS(txId, tran.transaction?.fee))
                 emit(Result.NOP())

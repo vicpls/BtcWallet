@@ -19,6 +19,7 @@ class WTransaction
 @Inject constructor(private val wallet: Wallet) {
 
     var transaction: Transaction? = null
+    var byteTransactions: MutableList<ByteArray>? = null
 
     init{
         Context.propagate(Context(netParams))   // it needs for library
@@ -31,6 +32,7 @@ class WTransaction
      */
     suspend fun createTransaction(amount: Coin, address: Address, feeRate: Coin): String {
 
+        byteTransactions = null
         createFixFee(amount, address, fixFee)
         val trFee = feeRate.multiply(transaction!!.vsize.toLong()).add(Coin.SATOSHI)
         createFixFee(amount, address, trFee)
@@ -49,7 +51,7 @@ class WTransaction
         addInputs(wallet)
 
         try {
-            transaction?.verify()            // VerificationException
+            transaction?.verify()
         }catch (ex: VerificationException){
             Log.d(com.exmpl.btcwallet.model.LOG_TAG, "Creating Transaction is invalid.")
             throw ex
@@ -59,42 +61,54 @@ class WTransaction
     }
 
 
-
-    private suspend fun addInputs(wallet: Wallet){
+    private suspend fun addInputs(wallet: Wallet)  {
         // 1. получить транзакции соответствующие utxo
         // 2. получить из транзакций  TransactionOutput(Point) c моим адресом
         // 3. Добавить к трнзакции input
 
-            withContext(Dispatchers.IO) {
-                // 1
-                val transactions = mutableListOf<Transaction>()
-                val trout = mutableListOf<TransactionOutput>()
+        val byteTr = byteTransactions ?: mutableListOf()
 
+        withContext(Dispatchers.IO) {
+            // 1
+            val transactions = mutableListOf<Transaction>()
+            val trout = mutableListOf<TransactionOutput>()
+
+            if (byteTr.isEmpty()) {
                 wallet.listUtxo.map { utxo ->
-                    Esplora().getTransaction(utxo.txid).collect{
-                        val trans = Transaction(netParams, it)
-                        transactions.add(trans)
-                        //2
-                        trout.add(trans.getOutput(utxo.vout))
+                    Esplora().getTransaction(utxo.txid).collect {
+                        byteTr.add(it)
                     }
                 }
-
-                // 3
-                trout.forEach {
-                    val outPoint = TransactionOutPoint(
-                        netParams,
-                        it.index.toLong(),
-                        it.parentTransactionHash)
-
-                    transaction?.addSignedInput(
-                        outPoint,
-                        Script(it.scriptBytes),
-                        it.value,
-                        wallet.key.ecKey)
-                }
-
             }
 
+            byteTr.forEach {
+                val trans = Transaction(netParams, it)
+                transactions.add(trans)
+            }
+
+            // 2
+            wallet.listUtxo.forEach { utxo ->
+                val tr = transactions.find { it.txId.toString() == utxo.txid }
+                if (tr != null) trout.add(tr.getOutput(utxo.vout))
+            }
+
+            // 3
+            trout.forEach {
+                val outPoint = TransactionOutPoint(
+                    netParams,
+                    it.index.toLong(),
+                    it.parentTransactionHash
+                )
+
+                transaction?.addSignedInput(
+                    outPoint,
+                    Script(it.scriptBytes),
+                    it.value,
+                    wallet.key.ecKey
+                )
+            }
+        }
+        byteTransactions=byteTr
     }
 
 

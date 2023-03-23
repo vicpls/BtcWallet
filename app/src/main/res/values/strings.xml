@@ -3,13 +3,12 @@
     <string name="action_settings">Settings</string>
 
     <!-- Strings used for fragments for navigation -->
-    <string name="fr_balance"> Balance</string>
+    <string name="fr_balance">  Bitcoin wallet</string>
     <string name="fr_success">Your funds have been sent!</string>
 
     <string name="bt_send_label">Send</string>
     <string name="bt_send_more">Send more</string>
 
-    <string name="previous">prev</string>
 
 
     <string name="hint_amount">Amount to send</string>

@@ -1,11 +1,13 @@
 package com.exmpl.btcwallet.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -44,8 +46,10 @@ class BalanceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btSend.setOnClickListener {
+            binding.btSend.isEnabled = false
             val amount = binding.etAmount.editText?.text.toString()
             val address = binding.etAddress.editText?.text.toString()
+            hideKeyboard(view)
             viewModel.send(amount, address)
         }
 
@@ -70,7 +74,6 @@ class BalanceFragment : Fragment() {
                             }
                         is Result.INPROCESS -> {
                             showProgressBar(true)
-                            binding.btSend.isEnabled = false
                         }
                         is Result.NOP -> {
                             showProgressBar(false)
@@ -100,6 +103,13 @@ class BalanceFragment : Fragment() {
     fun showProgressBar(isInProcess: Boolean){
         binding.progressBar.visibility =
             if (isInProcess) VISIBLE else INVISIBLE
+    }
+
+    fun hideKeyboard(view: View) {
+        //val inputMethodManager = getSystemService(requireContext(), Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputM = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        //inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        inputM.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     override fun onDestroyView() {
