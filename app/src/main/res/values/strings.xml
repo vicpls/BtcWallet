@@ -9,8 +9,6 @@
     <string name="bt_send_label">Send</string>
     <string name="bt_send_more">Send more</string>
 
-
-
     <string name="hint_amount">Amount to send</string>
     <string name="hint_address">Address to send</string>
     <string name="suffix">BTC</string>

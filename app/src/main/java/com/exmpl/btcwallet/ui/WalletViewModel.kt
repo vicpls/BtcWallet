@@ -54,7 +54,7 @@ class WalletViewModel
     }
 
     fun getHtml(): Spanned {
-        val html = """<a href="$bcExpUrl\$transactionId\">$transactionId"""
+        val html = """<a href="$bcExpUrl$transactionId\">$transactionId"""
         return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
     }
 

@@ -37,7 +37,7 @@ class SuccessFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        binding.tvSuccess.apply{
+        binding.tvTxId.apply{
             setMovementMethod( LinkMovementMethod.getInstance())
             text = viewModel.getHtml()
         };

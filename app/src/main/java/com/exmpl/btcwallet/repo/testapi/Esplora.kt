@@ -105,9 +105,9 @@ class Esplora @Inject constructor() : IbtcApi{
             try {
                 client.newCall(request).execute().let { response ->
                     if (response.isSuccessful) {
-                        Log.d(LOG_TAG, "Transaction sent. Id=${response.body!!.string()}")
-                        val resp = (response.body!!.string())
-                        emit(resp)
+                        val respBody = response.body!!.string()
+                        Log.d(LOG_TAG, "Transaction sent. Id=${respBody}")
+                        emit(respBody)
                     } else {
                         Log.d(LOG_TAG, "Response is not success. Code: ${response.code}\n Body: ${response.body?.string()}")
                     }

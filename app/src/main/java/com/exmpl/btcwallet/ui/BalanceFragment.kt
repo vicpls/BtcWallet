@@ -88,7 +88,7 @@ class BalanceFragment : Fragment() {
     }
 
 
-    fun editTextValidationSet() {
+    private fun editTextValidationSet() {
         binding.etAmount.editText?.doOnTextChanged { text, _, _, _ ->
             text ?: return@doOnTextChanged
 
