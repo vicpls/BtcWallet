@@ -6,13 +6,11 @@ import com.exmpl.btcwallet.repo.testapi.Esplora
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bitcoinj.core.*
-import org.bitcoinj.params.TestNet3Params
 import org.bitcoinj.script.Script
 import javax.inject.Inject
 
 private const val LOG_TAG = "$LOG_TAG.Transaction"
 private val fixFee = Coin.ofSat(300)     // Комиссия майнерам должна составлять 0.000001 tBTC.
-val netParams = TestNet3Params()
 
 
 class WTransaction
@@ -27,7 +25,7 @@ class WTransaction
 
     /**
      * Create transaction.
-     * @param fee rate in satoshi per Vbyte
+     * @param feeRate rate in satoshi per Vbyte
      * @return Hex string
      */
     suspend fun createTransaction(amount: Coin, address: Address, feeRate: Coin): String {

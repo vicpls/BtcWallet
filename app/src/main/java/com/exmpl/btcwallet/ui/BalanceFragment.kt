@@ -32,7 +32,7 @@ class BalanceFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    val viewModel : WalletViewModel by activityViewModels()
+    private val viewModel : WalletViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,15 +100,13 @@ class BalanceFragment : Fragment() {
         }
     }
 
-    fun showProgressBar(isInProcess: Boolean){
+    private fun showProgressBar(isInProcess: Boolean){
         binding.progressBar.visibility =
             if (isInProcess) VISIBLE else INVISIBLE
     }
 
-    fun hideKeyboard(view: View) {
-        //val inputMethodManager = getSystemService(requireContext(), Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    private fun hideKeyboard(view: View) {
         val inputM = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        //inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         inputM.hideSoftInputFromWindow(view.windowToken, 0)
     }
 

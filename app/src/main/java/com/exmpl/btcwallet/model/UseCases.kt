@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UseCases @Inject constructor(val wallet: Wallet) {
+class UseCases @Inject constructor(private val wallet: Wallet) {
 
     suspend fun updateBalance(): Flow<String> =
         wallet.updateBalance().map { it.toPlainString() }
@@ -65,7 +65,7 @@ class UseCases @Inject constructor(val wallet: Wallet) {
             emit(Result.NOP())
         }.flowOn(Dispatchers.Default)
 
-    fun getFee(blocksQty: Int) =
+    private fun getFee(blocksQty: Int) =
         wallet.getFee(blocksQty)
 
     /**

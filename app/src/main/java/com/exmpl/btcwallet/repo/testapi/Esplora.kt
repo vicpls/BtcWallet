@@ -57,7 +57,7 @@ class Esplora @Inject constructor() : IbtcApi{
                     response.close()
                 }
             } catch (e: IOException) {
-                Log.e(LOG_TAG, "Error to server connect while request FeeEstimates.", e);
+                Log.e(LOG_TAG, "Error to server connect while request FeeEstimates.", e)
             } catch (e: java.lang.IllegalStateException) {
                 Log.d(LOG_TAG, "Error requesting FeeEstimates", e)
             }
@@ -66,7 +66,7 @@ class Esplora @Inject constructor() : IbtcApi{
 
     //GET /tx/:txid/raw
     override fun getTransaction(id: String): Flow<ByteArray> =
-        flow<ByteArray> {
+        flow {
             val request = createRequest("/tx/%s/raw", id)
 
             try {
@@ -79,7 +79,7 @@ class Esplora @Inject constructor() : IbtcApi{
                     response.close()
                 }
             } catch (e: IOException) {
-                Log.e(LOG_TAG,"Error to server connect while request transaction Id=$id", e);
+                Log.e(LOG_TAG,"Error to server connect while request transaction Id=$id", e)
             } catch (e: java.lang.IllegalStateException){
                 Log.d(LOG_TAG, "Error requesting transaction Id=$id", e)
             }
@@ -114,7 +114,7 @@ class Esplora @Inject constructor() : IbtcApi{
                     response.close()
                 }
             } catch (e: IOException) {
-                Log.e(LOG_TAG,"Error to server connect while post transaction.", e);
+                Log.e(LOG_TAG,"Error to server connect while post transaction.", e)
             } catch (e: java.lang.IllegalStateException){
                 Log.d(LOG_TAG, "Error post transaction.", e)
             }
@@ -145,7 +145,7 @@ class Esplora @Inject constructor() : IbtcApi{
                     response.close()
                 }
             } catch (e: IOException) {
-                Log.e(LOG_TAG, "Error to server connect while request utxo.", e);
+                Log.e(LOG_TAG, "Error to server connect while request utxo.", e)
             } catch (e: java.lang.IllegalStateException) {
                 Log.d(LOG_TAG, "Error requesting UTXO", e)
             }
@@ -155,10 +155,9 @@ class Esplora @Inject constructor() : IbtcApi{
 
         val url = BASE_URL + String.format(apiPoint, address)
 
-        val request = Request.Builder()
+        return Request.Builder()
             .url(url)
             .build()
-        return request
     }
 
 

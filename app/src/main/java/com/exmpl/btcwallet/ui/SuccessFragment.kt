@@ -22,12 +22,12 @@ class SuccessFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    val viewModel : WalletViewModel by activityViewModels()
+    private val viewModel : WalletViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = SuccessFragmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -38,9 +38,9 @@ class SuccessFragment : Fragment() {
 
 
         binding.tvTxId.apply{
-            setMovementMethod( LinkMovementMethod.getInstance())
+            movementMethod = LinkMovementMethod.getInstance()
             text = viewModel.getHtml()
-        };
+        }
 
         binding.tvTransactionFee.text = viewModel.transactionFee
 

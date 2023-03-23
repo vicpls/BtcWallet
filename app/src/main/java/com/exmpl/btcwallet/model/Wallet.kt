@@ -7,16 +7,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
+import org.bitcoinj.params.TestNet3Params
 import org.bitcoinj.script.Script
 import javax.inject.Inject
 import javax.inject.Singleton
+
+val netParams = TestNet3Params()
+val script = Script.ScriptType.P2WPKH
 
 @Singleton
 class Wallet
 @Inject constructor(val key: Key, private val btcApi: IbtcApi) {
 
-    val address: Address = Address.fromKey(netParams, key.ecKey, Script.ScriptType.P2WPKH)
-    //val address: Address = Address.fromKey(netParams, key.ecKey, Script.ScriptType.P2PKH)
+    val address: Address = Address.fromKey(netParams, key.ecKey, script)
 
     var listUtxo: List<Utxo> = emptyList()
     private set
