@@ -17,9 +17,6 @@ import com.exmpl.btcwallet.databinding.SuccessFragmentBinding
 class SuccessFragment : Fragment() {
 
     private var _binding: SuccessFragmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private val viewModel : WalletViewModel by activityViewModels()

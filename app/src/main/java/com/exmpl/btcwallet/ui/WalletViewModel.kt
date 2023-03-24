@@ -2,6 +2,7 @@ package com.exmpl.btcwallet.ui
 
 import android.text.Html
 import android.text.Spanned
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exmpl.btcwallet.model.Result
@@ -13,11 +14,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TXID = "txId"
+private const val FEE = "fee"
 private const val bcExpUrl = "https://blockstream.info/testnet/"
 
 @HiltViewModel
 class WalletViewModel
-@Inject constructor(private val useCases: UseCases) : ViewModel() {
+@Inject constructor(private val useCases: UseCases, private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _balance = MutableStateFlow("-?-")
     val balance: StateFlow<String> = _balance.asStateFlow()
@@ -25,10 +28,21 @@ class WalletViewModel
     private val _trResult = MutableStateFlow<Result>(Result.NOP())
     val trResult: StateFlow<Result> = _trResult.asStateFlow()
 
-    var transactionId: String = ""
-    private set
-    var transactionFee: String = ""
-    private set
+    var transactionId: String = savedStateHandle[TXID] ?: ""
+    private set(value) {
+        value.let {
+            field = it
+            savedStateHandle[TXID] = it
+        }
+    }
+
+    var transactionFee: String = savedStateHandle[FEE] ?: ""
+    private set(value){
+        value.let {
+            field = it
+            savedStateHandle[FEE] = it
+        }
+    }
 
     init{ updateBalance() }
 

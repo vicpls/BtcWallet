@@ -31,14 +31,15 @@ class WTransaction
     suspend fun createTransaction(amount: Coin, address: Address, feeRate: Coin): String {
 
         byteTransactions = null
-        createFixFee(amount, address, fixFee)
+        createTrWFee(amount, address, fixFee)
         val trFee = feeRate.multiply(transaction!!.vsize.toLong()).add(Coin.SATOSHI)
-        createFixFee(amount, address, trFee)
+        createTrWFee(amount, address, trFee)
 
+        byteTransactions = null
         return transaction!!.toHexString()
     }
 
-    private suspend fun createFixFee(amount: Coin, address: Address, fee: Coin): Int {
+    private suspend fun createTrWFee(amount: Coin, address: Address, fee: Coin): Int {
 
         transaction = Transaction(netParams).apply {
             confidence.source = TransactionConfidence.Source.SELF
