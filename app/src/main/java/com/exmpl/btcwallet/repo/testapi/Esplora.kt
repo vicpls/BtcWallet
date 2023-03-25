@@ -1,15 +1,13 @@
 package com.exmpl.btcwallet.repo.testapi
 
 import android.util.Log
+import com.exmpl.btcwallet.model.TransactionInfo
 import com.exmpl.btcwallet.model.Utxo
 import com.exmpl.btcwallet.repo.IbtcApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -29,6 +27,10 @@ private const val BASE_URL = "https://blockstream.info/testnet/api"
  */
 @Singleton
 class Esplora @Inject constructor() : IbtcApi{
+
+    override fun getHistory(address: String, txId: String?): Flow<TransactionInfo> =
+        getEsprolaHistory(address, txId).map ( EsploraTransaction::toTransactionInfo )
+
 
     override fun getUtxo(address: String): Flow<Utxo> =
             getFlowEsploraUtxo(address)
@@ -127,6 +129,9 @@ class Esplora @Inject constructor() : IbtcApi{
     private val listEsploraUtxo: ParameterizedType =
         Types.newParameterizedType(List::class.java, EsploraUtxo::class.java)
 
+    private val listEsploraTransaction: ParameterizedType =
+        Types.newParameterizedType(List::class.java, EsploraTransaction::class.java)
+
 
     // GET /address/:address/utxo
     private fun getFlowEsploraUtxo(address: String): Flow<EsploraUtxo> =
@@ -137,10 +142,10 @@ class Esplora @Inject constructor() : IbtcApi{
                 client.newCall(request).execute().let { response ->
                     if (response.isSuccessful) {
                         val result = parseUtxoResponse(response.body!!)
-                        result.forEach { emit(it) }
-                        Log.d(LOG_TAG,"Response is Ok. Q-ty UTXO: ${result.size}")
+                        emitAll(result.asFlow())
+                        Log.d(LOG_TAG,"Response is Ok. UTXO q-ty : ${result.size}")
                     } else {
-                        Log.d(LOG_TAG, "Response is not success. Code: ${response.code}, Mes: ${response.message}")
+                        Log.d(LOG_TAG, "Response is not success. Code: ${response.code}, Body: ${response.body.toString()}")
                     }
                     response.close()
                 }
@@ -151,15 +156,62 @@ class Esplora @Inject constructor() : IbtcApi{
             }
         }.flowOn(Dispatchers.IO)
 
-    private fun createRequest(apiPoint: String, address: String): Request {
 
-        val url = BASE_URL + String.format(apiPoint, address)
+    /* GET /address/:address/txs
+        Get transaction history for the specified address/scripthash, sorted with newest first.
+        Returns up to 50 mempool transactions plus the first 25 confirmed transactions.
+      -----------------------
+      GET /address/:address/txs/chain[/:last_seen_txid]
+        Get confirmed transaction history for the specified address/scripthash, sorted with newest first.
+        Returns 25 transactions per page.
+     */
+    private fun getEsprolaHistory(address: String, txId: String?): Flow<EsploraTransaction> =
+        flow {
+            val request = if (txId ==null) createRequest("/address/%s/txs/chain", address)
+                          else createRequest("/address/%s/txs/chain/%s", address, txId)
+            try {
+                client.newCall(request).execute().let { response ->
+                    if (response.isSuccessful) {
+                        val result = parseTransactionResponse(response.body!!)
+                        emitAll(result.asFlow())
+                        Log.d(LOG_TAG,"Response is Ok. Transaction q-ty: ${result.size}")
+                    } else {
+                        Log.d(LOG_TAG, "Response is not success. Code: ${response.code}, Body: ${response.body.toString()}")
+                    }
+                    response.close()
+                }
+            } catch (e: IOException) {
+                Log.e(LOG_TAG, "Error to server connect while request utxo.", e)
+            } catch (e: java.lang.IllegalStateException) {
+                Log.d(LOG_TAG, "Error requesting UTXO", e)
+            }
+        }.flowOn(Dispatchers.IO)
+
+
+
+
+    private fun createRequest(apiPoint: String, vararg param: String): Request {
+
+        val url = BASE_URL + String.format(apiPoint, *param)
 
         return Request.Builder()
             .url(url)
             .build()
     }
 
+    private fun parseTransactionResponse(response: ResponseBody): List<EsploraTransaction> {
+        val esploraTxJsonAdapter = Moshi
+            .Builder()
+            .build()
+            .adapter <List<EsploraTransaction>>(listEsploraTransaction)
+
+        return try {
+            esploraTxJsonAdapter.fromJson(response.string()) ?: emptyList()
+        }catch (ex: IOException){
+            Log.d(LOG_TAG, "Transaction parsing error.", ex)
+            emptyList()
+        }
+    }
 
     private fun parseUtxoResponse(response: ResponseBody): List<EsploraUtxo> {
         val esploraUtxoJsonAdapter = Moshi

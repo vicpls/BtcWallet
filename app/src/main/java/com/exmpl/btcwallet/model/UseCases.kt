@@ -2,6 +2,7 @@ package com.exmpl.btcwallet.model
 
 import android.util.Log
 import com.exmpl.btcwallet.LOG_TAG
+import com.exmpl.btcwallet.ui.history.toTransactionViewInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import org.bitcoinj.core.Address
@@ -66,6 +67,13 @@ class UseCases @Inject constructor(private val wallet: Wallet) {
                         else "The transaction could not be processed."
                     )))
         }.flowOn(Dispatchers.Default)
+
+
+    fun getHistory(fromId: String?): Flow<TransactionViewInfo> =
+        (wallet.getHistory(fromId)).map{
+            it.toTransactionViewInfo(wallet.address.toString())
+        }
+
 
     private fun parseAddress(address: String): Address? =
         try {

@@ -14,7 +14,11 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SuccessFragment" />
+        <action
+        android:id="@+id/action_balanceFragment_to_historyFragment"
+        app:destination="@id/HistoryFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/SuccessFragment"
         android:name="com.exmpl.btcwallet.ui.SuccessFragment"
@@ -24,5 +28,11 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/BalanceFragment" />
+
     </fragment>
+    <fragment
+        android:id="@+id/HistoryFragment"
+        android:name="com.exmpl.btcwallet.ui.history.HistoryFragment"
+        android:label="@string/historyFrTitle"
+        tools:layout="@layout/history_fragment" />
 </navigation>

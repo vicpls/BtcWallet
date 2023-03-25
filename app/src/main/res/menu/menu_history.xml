@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.exmpl.btcwallet.ui.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_history"
+        android:icon="@drawable/history"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/action_history"
+        android:tooltipText="@string/action_history"
+        app:showAsAction="always" />
 </menu>

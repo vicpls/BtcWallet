@@ -2,12 +2,12 @@ package com.exmpl.btcwallet.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -53,17 +53,25 @@ class BalanceFragment : Fragment() {
             viewModel.send(amount, address)
         }
 
+        trResultSubscribe()
+
+        editTextValidationSet()
+
+        addMenuProvider()
+    }
+
+    private fun trResultSubscribe() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                viewModel.trResult.collect{
+                viewModel.trResult.collect {
                     when (it) {
-                        is Result.SUCCESS<*,*> -> {
+                        is Result.SUCCESS<*, *> -> {
                             showProgressBar(false)
                             binding.btSend.isEnabled = true
                             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                             viewModel.updateBalance()
-                            }
+                        }
                         is Result.ERORR -> {
                             showProgressBar(false)
                             Snackbar.make(
@@ -71,7 +79,7 @@ class BalanceFragment : Fragment() {
                                 it.description,
                                 Snackbar.LENGTH_LONG
                             ).show()
-                            }
+                        }
                         is Result.INPROCESS -> {
                             showProgressBar(true)
                         }
@@ -83,8 +91,21 @@ class BalanceFragment : Fragment() {
                 }
             }
         }
+    }
 
-        editTextValidationSet()
+    private fun addMenuProvider() {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_history, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                findNavController().navigate(R.id.action_balanceFragment_to_historyFragment)
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
 

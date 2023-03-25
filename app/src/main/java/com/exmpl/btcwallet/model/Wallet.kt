@@ -27,7 +27,7 @@ class Wallet
     var amount: Coin = Coin.ZERO
     private set
 
-    private var feeRate = TransactionRate(btcApi)
+    private var feeRate = FeeRate(btcApi)
 
 
     fun getFee(blockQty: Int): Coin? =
@@ -56,5 +56,8 @@ class Wallet
 
     fun sendTransaction(bodyHexString: String): Flow<String> =
         btcApi.postTransaction(bodyHexString)
+
+    fun getHistory(fromId: String?): Flow<TransactionInfo> =
+        btcApi.getHistory(address.toString(), fromId)
 
 }

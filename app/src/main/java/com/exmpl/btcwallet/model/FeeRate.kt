@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TransactionRate @Inject constructor(val api: IbtcApi) {
+class FeeRate @Inject constructor(val api: IbtcApi) {
 
     var fees: Map<String, String> = mutableMapOf()
 

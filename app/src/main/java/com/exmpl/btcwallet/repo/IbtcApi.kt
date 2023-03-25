@@ -1,5 +1,6 @@
 package com.exmpl.btcwallet.repo
 
+import com.exmpl.btcwallet.model.TransactionInfo
 import com.exmpl.btcwallet.model.Utxo
 import kotlinx.coroutines.flow.Flow
 
@@ -21,6 +22,8 @@ interface IbtcApi {
      * @return Id of sent transaction or empty string.
      */
     fun postTransaction(bodyHexString: String): Flow<String>
+
+    fun getHistory(address: String, txId: String?): Flow<TransactionInfo>
 
 }
 
