@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DiModule {
+abstract class RepoDiModule {
 
     @Binds
     abstract fun bindLocStore(store: PrefStore) : ILocalStore

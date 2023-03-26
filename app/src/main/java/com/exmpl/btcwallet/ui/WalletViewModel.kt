@@ -5,8 +5,8 @@ import android.text.Spanned
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.exmpl.btcwallet.model.IUseCases
 import com.exmpl.btcwallet.model.Result
-import com.exmpl.btcwallet.model.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ private const val bcExpUrl = "https://blockstream.info/testnet/"
 
 @HiltViewModel
 class WalletViewModel
-@Inject constructor(private val useCases: UseCases, private val savedStateHandle: SavedStateHandle) : ViewModel() {
+@Inject constructor(private val useCases: IUseCases, private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _balance = MutableStateFlow("-?-")
     val balance: StateFlow<String> = _balance.asStateFlow()

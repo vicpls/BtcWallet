@@ -12,21 +12,21 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UseCases @Inject constructor(private val wallet: Wallet) {
+class UseCases @Inject constructor(private val wallet: Wallet): IUseCases {
 
-    suspend fun updateBalance(): Flow<String> =
+    override suspend fun updateBalance(): Flow<String> =
         wallet.updateBalance().map { it.toPlainString() }
 
     /**
      *  For user input validation only.
      */
-    fun isSpentCorrect(value: String): Boolean =
+    override fun isSpentCorrect(value: String): Boolean =
         try {
             wallet.isSpentCorrect(Coin.parseCoin(value), Coin.valueOf(100))
         }catch (_: IllegalArgumentException){true}
 
 
-    fun sendMany(amount: String, address: String): Flow<Result> =
+    override fun sendMany(amount: String, address: String): Flow<Result> =
         flow {
             emit(Result.INPROCESS())
 
@@ -69,7 +69,7 @@ class UseCases @Inject constructor(private val wallet: Wallet) {
         }.flowOn(Dispatchers.Default)
 
 
-    fun getHistory(fromId: String?): Flow<TransactionViewInfo> =
+    override fun getHistory(fromId: String?): Flow<TransactionViewInfo> =
         (wallet.getHistory(fromId)).map{
             it.toTransactionViewInfo(wallet.address.toString())
         }

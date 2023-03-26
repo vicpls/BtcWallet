@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.exmpl.btcwallet.model.UseCases
+import com.exmpl.btcwallet.model.IUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryVM
-@Inject constructor(private val useCases: UseCases) : ViewModel() {
+@Inject constructor(private val useCases: IUseCases) : ViewModel() {
 
     val flow = Pager(
         // Configure how data is loaded by passing additional properties to
