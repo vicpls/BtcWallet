@@ -23,7 +23,8 @@ data class EsploraTransaction(
         val scriptsig: String,
         @Json(name = "scriptsig_asm")
         val scriptsigAsm: String,
-        val witness: List<String>,
+        @Json(ignore = true)
+        val witness: List<String> = emptyList(),
         @Json(name = "is_coinbase")
         val isCoinbase: Boolean, // false
         val sequence: Long // 4294967295

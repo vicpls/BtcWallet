@@ -4,6 +4,7 @@ import android.util.Log
 import com.exmpl.btcwallet.model.TransactionInfo
 import com.exmpl.btcwallet.model.Utxo
 import com.exmpl.btcwallet.repo.IbtcApi
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
@@ -207,7 +208,7 @@ class Esplora @Inject constructor() : IbtcApi{
 
         return try {
             esploraTxJsonAdapter.fromJson(response.string()) ?: emptyList()
-        }catch (ex: IOException){
+        }catch (ex: JsonDataException){
             Log.d(LOG_TAG, "Transaction parsing error.", ex)
             emptyList()
         }
@@ -235,7 +236,7 @@ class Esplora @Inject constructor() : IbtcApi{
 
         return try {
             esploraFeeJsonAdapter.fromJson(response.string()) ?: emptyMap()
-        } catch (ex: IOException) {
+        } catch (ex: JsonDataException) {
             Log.d(LOG_TAG, "UTXO parsing error.", ex)
             emptyMap()
         }
