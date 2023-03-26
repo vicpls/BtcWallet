@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 const val dateFormat = "dd-MM-yyyy HH:mm"
-const val idMaxHalf = 9
+const val idMaxHalf = 8
 const val idFiller = "..."
 
 fun TransactionInfo.toTransactionViewInfo(myAddress: String): TransactionViewInfo
