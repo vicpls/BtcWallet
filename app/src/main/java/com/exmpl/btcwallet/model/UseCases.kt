@@ -2,6 +2,7 @@ package com.exmpl.btcwallet.model
 
 import android.util.Log
 import com.exmpl.btcwallet.LOG_TAG
+import com.exmpl.btcwallet.presenter.TransactionViewInfo
 import com.exmpl.btcwallet.ui.history.toTransactionViewInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

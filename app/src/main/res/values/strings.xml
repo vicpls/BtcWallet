@@ -19,7 +19,7 @@
     <string name="tr_fee_title">Transaction fee, satoshi:</string>
     <string name="over_limit">Amount with fee exceeds funds</string>
     <string name="balance">Balance</string>
-    <string name="coin_name">testBTC</string>
+    <string name="coin_name">test BTC</string>
     <string name="historyFrTitle">Transaction history</string>
 
 

@@ -2,7 +2,7 @@ package com.exmpl.btcwallet.ui.history
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.exmpl.btcwallet.model.TransactionViewInfo
+import com.exmpl.btcwallet.presenter.TransactionViewInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 

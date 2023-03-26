@@ -1,5 +1,6 @@
 package com.exmpl.btcwallet.model
 
+import com.exmpl.btcwallet.presenter.TransactionViewInfo
 import kotlinx.coroutines.flow.Flow
 
 interface IUseCases {

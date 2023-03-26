@@ -1,4 +1,4 @@
-package com.exmpl.btcwallet.model
+package com.exmpl.btcwallet.presenter
 
 data class TransactionViewInfo(
     val isSpending: Boolean,

@@ -1,7 +1,7 @@
 package com.exmpl.btcwallet.ui.history
 
 import com.exmpl.btcwallet.model.TransactionInfo
-import com.exmpl.btcwallet.model.TransactionViewInfo
+import com.exmpl.btcwallet.presenter.TransactionViewInfo
 import org.bitcoinj.core.Coin
 import java.text.SimpleDateFormat
 import java.util.*
