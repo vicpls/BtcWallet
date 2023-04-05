@@ -61,8 +61,6 @@ class Esplora @Inject constructor() : IbtcApi{
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Error to server connect while request FeeEstimates.", e)
-            } catch (e: java.lang.IllegalStateException) {
-                Log.d(LOG_TAG, "Error requesting FeeEstimates", e)
             }
         }.flowOn(Dispatchers.IO)
 
@@ -83,8 +81,6 @@ class Esplora @Inject constructor() : IbtcApi{
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG,"Error to server connect while request transaction Id=$id", e)
-            } catch (e: java.lang.IllegalStateException){
-                Log.d(LOG_TAG, "Error requesting transaction Id=$id", e)
             }
         }.flowOn(Dispatchers.IO)
 
@@ -118,8 +114,6 @@ class Esplora @Inject constructor() : IbtcApi{
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG,"Error to server connect while post transaction.", e)
-            } catch (e: java.lang.IllegalStateException){
-                Log.d(LOG_TAG, "Error post transaction.", e)
             }
         }.flowOn(Dispatchers.IO)
 
@@ -152,8 +146,6 @@ class Esplora @Inject constructor() : IbtcApi{
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Error to server connect while request utxo.", e)
-            } catch (e: java.lang.IllegalStateException) {
-                Log.d(LOG_TAG, "Error requesting UTXO", e)
             }
         }.flowOn(Dispatchers.IO)
 
@@ -183,8 +175,6 @@ class Esplora @Inject constructor() : IbtcApi{
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "Error to server connect while request utxo.", e)
-            } catch (e: java.lang.IllegalStateException) {
-                Log.d(LOG_TAG, "Error requesting UTXO", e)
             }
         }.flowOn(Dispatchers.IO)
 
