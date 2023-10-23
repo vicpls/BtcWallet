@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    ///id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
-    id("com.google.devtools.ksp").version("1.9.10-1.0.13")
+    id ("com.android.application")
+    id ("org.jetbrains.kotlin.android")
+    id ("com.google.devtools.ksp")//.version("1.9.10-1.0.13")
+//    id("kotlin-kapt")
+    id ("dagger.hilt.android.plugin")
 }
 
 android {
@@ -71,15 +71,15 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
 
     //          Hilt
-    val hiltVer = "2.48"
+    val hiltVer = "2.48.1"
     implementation ("com.google.dagger:hilt-android:$hiltVer")
     ksp ("com.google.dagger:hilt-compiler:$hiltVer")
-    //kapt "com.google.dagger:hilt-compiler:$hilt_ver"
+//    kapt ("com.google.dagger:hilt-compiler:$hiltVer")
 
     implementation ("org.bitcoinj:bitcoinj-core:0.16.2")
 
     // Moshi
-    val moshiVer = "1.14.0"
+    val moshiVer = "1.15.0"
     implementation ("com.squareup.moshi:moshi-kotlin:$moshiVer")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVer")
 
