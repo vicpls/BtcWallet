@@ -5,7 +5,12 @@ import com.exmpl.btcwallet.LOG_TAG
 import com.exmpl.btcwallet.presenter.TransactionViewInfo
 import com.exmpl.btcwallet.ui.history.toTransactionViewInfo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.AddressFormatException
 import org.bitcoinj.core.Coin
@@ -18,6 +23,20 @@ class UseCases @Inject constructor(private val wallet: Wallet): IUseCases {
     override suspend fun updateBalance(): Flow<String> =
         wallet.updateBalance().map { it.toPlainString() }
 
+    override suspend fun updateBalanceNew(): Flow<Result> =
+        flow {
+            emit(Result.INPROCESS())
+
+            wallet.updateBalance()
+                .catch {
+                    val err = "Can't get balance"
+                    emit(Result.ERROR(it.message ?: err))
+                    Log.d(LOG_TAG, err, it)
+                }
+                .collect {
+                    emit(Result.SUCCESS<String, String?>(it.toPlainString()))
+                }
+        }
     /**
      *  For user input validation only.
      */
@@ -27,19 +46,22 @@ class UseCases @Inject constructor(private val wallet: Wallet): IUseCases {
         }catch (_: IllegalArgumentException){true}
 
 
-    override fun sendMany(amount: String, address: String): Flow<Result> =
-        flow {
+    override fun sendMany(amount: String, address: String): Flow<Result> {
+
+        val commonError = "The transaction could not be processed."
+
+        return flow {
             emit(Result.INPROCESS())
 
             val coin = parseAmount(amount)
-            if (coin==null) {
-                emitAll(emitWNop(Result.ERORR("Can't parse amount.")))
+            if (coin == null) {
+                emitAll(emitWNop(Result.ERROR("Can't parse amount.")))
                 return@flow
             }
 
             val adr = parseAddress(address)
-            if (adr==null)  {
-                emitAll(emitWNop(Result.ERORR("Invalid address.")))
+            if (adr == null) {
+                emitAll(emitWNop(Result.ERROR("Invalid address.")))
                 return@flow
             }
 
@@ -55,19 +77,27 @@ class UseCases @Inject constructor(private val wallet: Wallet): IUseCases {
                 .catch {
                     val mes = "Server error"
                     Log.d(LOG_TAG, mes, it)
-                    emitAll(emitWNop(Result.ERORR(mes)))}
+                    emitAll(emitWNop(Result.ERROR(mes)))
+                }
                 .collect { txId = it }
             if (txId.isNotEmpty()) {
                 emitAll(emitWNop(Result.SUCCESS(txId, tran.transaction?.fee)))
             } else {
-                emitAll(emitWNop(Result.ERORR("The transaction could not be processed.")))
+                emitAll(emitWNop(Result.ERROR(commonError)))
             }
         }.catch {
-            emitAll(emitWNop(Result.ERORR(
-                        if (it is IllegalWalletState) "Insufficient funds"
-                        else "The transaction could not be processed."
-                    )))
+            Log.d(LOG_TAG, "Can't prepare transaction.", it)
+            emitAll(
+                emitWNop(
+                    Result.ERROR(
+                        if (it.cause is IllegalWalletState) it.cause?.message ?: commonError
+                        else commonError
+
+                    )
+                )
+            )
         }.flowOn(Dispatchers.Default)
+    }
 
 
     override fun getHistory(fromId: String?): Flow<TransactionViewInfo> =
@@ -79,14 +109,16 @@ class UseCases @Inject constructor(private val wallet: Wallet): IUseCases {
     private fun parseAddress(address: String): Address? =
         try {
             Address.fromString(netParams, address)
-        } catch (ex: AddressFormatException) {
+        } catch (_: AddressFormatException) {
+            Log.d(LOG_TAG, "Can't parse address.")
             null
         }
 
     private fun parseAmount(amount: String): Coin? =
         try {
             Coin.parseCoinInexact(amount)
-        } catch (ex: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
+            Log.d(LOG_TAG, "Can't parse amount.")
             null
         }
 
@@ -94,7 +126,8 @@ class UseCases @Inject constructor(private val wallet: Wallet): IUseCases {
     private fun emitWNop(result: Result) : Flow<Result> =
         flow{
             emit(result)
-            emit(Result.NOP())
+            /*delay(500)
+            emit(Result.NOP())*/
         }
 
     private fun getFee(blocksQty: Int) =

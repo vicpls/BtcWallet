@@ -1,19 +1,17 @@
 package com.exmpl.btcwallet.ui
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.material3.MaterialTheme
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.exmpl.btcwallet.R
 import com.exmpl.btcwallet.databinding.ActivityMainBinding
+import com.exmpl.btcwallet.ui.compo.MainActivityScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -21,12 +19,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    val viewModel: WalletViewModel by viewModels()
+    private val viewModel: WalletViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        /*binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -37,15 +35,21 @@ class MainActivity : AppCompatActivity() {
 
         binding.appBarLayout.setOnClickListener{
             viewModel.updateBalance()
+        }*/
+
+        setContent{
+            MaterialTheme {
+                MainActivityScreen()
+            }
         }
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.balance.collect{
                     binding.tvBalanceAmount.text = it
                 }
             }
-        }
+        }*/
     }
 
 

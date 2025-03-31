@@ -2,9 +2,11 @@ package com.exmpl.btcwallet.ui
 
 import android.text.Html
 import android.text.Spanned
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.exmpl.btcwallet.LOG_TAG
 import com.exmpl.btcwallet.model.IUseCases
 import com.exmpl.btcwallet.model.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,10 +22,16 @@ private const val bcExpUrl = "https://blockstream.info/testnet/"
 
 @HiltViewModel
 class WalletViewModel
-@Inject constructor(private val useCases: IUseCases, private val savedStateHandle: SavedStateHandle) : ViewModel() {
+@Inject constructor(
+    private val useCases: IUseCases,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _balance = MutableStateFlow("-?-")
     val balance: StateFlow<String> = _balance.asStateFlow()
+
+    private val _balanceNew: MutableStateFlow<Result> = MutableStateFlow(Result.INPROCESS())
+    val balanceNew: StateFlow<Result> = _balanceNew.asStateFlow()
 
     private val _trResult = MutableStateFlow<Result>(Result.NOP())
     val trResult: StateFlow<Result> = _trResult.asStateFlow()
@@ -44,12 +52,21 @@ class WalletViewModel
         }
     }
 
-    init{ updateBalance() }
+//    init{ updateBalance() }
+    init{ updateBalanceNew() }
 
     fun updateBalance(){
         viewModelScope.launch {
             useCases.updateBalance().collect {
                 _balance.emit(it)
+            }
+        }
+    }
+
+    fun updateBalanceNew(){
+        viewModelScope.launch {
+            useCases.updateBalanceNew().collect {
+                _balanceNew.emit(it)
             }
         }
     }
@@ -61,7 +78,9 @@ class WalletViewModel
                     if (it is Result.SUCCESS<*,*>) {
                         transactionId = it.data.toString()
                         transactionFee = it.data2.toString()
+                        updateBalanceNew()
                     }
+                    Log.d(LOG_TAG, "emitting: ${it::class.simpleName}")
                     _trResult.emit(it)
                 }
         }

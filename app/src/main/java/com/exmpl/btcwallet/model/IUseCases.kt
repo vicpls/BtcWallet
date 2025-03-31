@@ -12,4 +12,6 @@ interface IUseCases {
      *  For user input validation only.
      */
     fun isSpentCorrect(value: String): Boolean
+
+    suspend fun updateBalanceNew(): Flow<Result>
 }

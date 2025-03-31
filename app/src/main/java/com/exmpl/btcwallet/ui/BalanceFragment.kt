@@ -2,9 +2,14 @@ package com.exmpl.btcwallet.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -72,7 +77,7 @@ class BalanceFragment : Fragment() {
                             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                             viewModel.updateBalance()
                         }
-                        is Result.ERORR -> {
+                        is Result.ERROR -> {
                             showProgressBar(false)
                             Snackbar.make(
                                 binding.guideline,

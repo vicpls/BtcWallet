@@ -8,7 +8,12 @@ import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -145,7 +150,9 @@ class Esplora @Inject constructor() : IbtcApi{
                     response.close()
                 }
             } catch (e: IOException) {
-                Log.e(LOG_TAG, "Error to server connect while request utxo.", e)
+                Log.e(LOG_TAG, "Error to server connect while request utxo.")//, e)
+
+                throw Exception("Error to server connect while request utxo.", e)
             }
         }.flowOn(Dispatchers.IO)
 

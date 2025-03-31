@@ -1,10 +1,17 @@
 package com.exmpl.btcwallet.model
 
 import android.util.Log
+import com.exmpl.btcwallet.LOG_TAG
 import com.exmpl.btcwallet.repo.IbtcApi
 import com.exmpl.btcwallet.repo.testapi.Esplora
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
 import org.bitcoinj.core.Address
 import org.bitcoinj.core.Coin
 import org.bitcoinj.params.TestNet3Params
@@ -42,16 +49,20 @@ class Wallet
 
 
     suspend fun updateBalance(): Flow<Coin> {
+
+        var exception: Throwable? = null
+
         amount = Coin.ZERO
         listUtxo = Esplora()
             .getUtxo(address.toString())
+            .catch { exception = it }
             .onEach { amount = amount.add(it.value) }
             .flowOn(Dispatchers.Default)
             .toList()
 
-        Log.d(com.exmpl.btcwallet.LOG_TAG, "Balance update: ${amount.toFriendlyString()}")
+        Log.d(LOG_TAG, "Balance update: ${amount.toFriendlyString()}")
 
-        return flowOf(amount)
+        return if (exception ==null) flowOf(amount) else flow{throw exception}
     }
 
     fun sendTransaction(bodyHexString: String): Flow<String> =

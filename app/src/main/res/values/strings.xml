@@ -10,6 +10,7 @@
     <string name="bt_send_more">Send more</string>
 
     <string name="hint_amount">Amount to send</string>
+    <string name="amount">amount</string>
     <string name="hint_address">Address to send</string>
     <string name="suffix">BTC</string>
 
@@ -21,6 +22,7 @@
     <string name="balance">Balance</string>
     <string name="coin_name">test BTC</string>
     <string name="historyFrTitle">Transaction history</string>
+    <string name="not_available">not available</string>
 
 
 </resources>
