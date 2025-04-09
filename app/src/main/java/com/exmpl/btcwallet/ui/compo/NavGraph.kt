@@ -16,6 +16,9 @@ object SendingForm
 @Serializable
 data class SuccessScreen(val trId: String, val fee: String)
 
+@Serializable
+object History
+
 @Composable
 fun getNavGraph(navController: NavController): NavGraph {
     return remember(navController) {
@@ -29,6 +32,10 @@ fun getNavGraph(navController: NavController): NavGraph {
             composable<SuccessScreen> {
                 val myRoute = it.toRoute<SuccessScreen>()
                 SuccessScreen(myRoute.trId, myRoute.fee) { navController.navigate(SendingForm) }
+            }
+
+            composable<History> {
+                History()
             }
         }
     }

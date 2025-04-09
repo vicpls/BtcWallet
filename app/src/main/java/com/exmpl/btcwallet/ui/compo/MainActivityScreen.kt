@@ -36,12 +36,7 @@ val LocalSnackBarState = compositionLocalOf <MutableState<SnackbarHostState>> {
 fun MainActivityScreen(
     walletVm: WalletViewModel = viewModel(),
 ) {
-//    val balance = walletVm.balance.collectAsState()
     val balanceNew = walletVm.balanceNew.collectAsState()
-
-    /*MainActivityScreen(
-        balance,
-    ) { walletVm.updateBalanceNew() }*/
 
     MainActivityScreen(balanceNew, walletVm::updateBalanceNew)
 }
@@ -56,7 +51,10 @@ fun MainActivityScreen(
     /*val isSendEnable = remember { mutableStateOf(true) }
     val isProgress = remember { mutableStateOf(false) }*/
 
-    val navController = rememberNavController()
+    val navController = rememberNavController()/*.apply {
+        setGraph(getNavGraph(this), null)
+    }*/
+
 
 //    Log.d(LOG_TAG, "isSendEnable.value= ${isSendEnable.value}")
 
@@ -65,10 +63,11 @@ fun MainActivityScreen(
     BtcComposeAppTheme {
         Surface {
             Box(Modifier.fillMaxSize()) {
-                CompositionLocalProvider(LocalSnackBarState.provides(snackBarHostState)) {
+                CompositionLocalProvider(
+                    LocalSnackBarState.provides(snackBarHostState)
+                ) {
                     Column {
-//                        WalletAppBar(balance){ onClickBalance }
-                        WalletAppBar(balanceNew, onClickBalance)
+                        WalletAppBar(balanceNew, onClickBalance, navController)
                         Spacer(Modifier.height(30.dp))
                         NavHost(navController, getNavGraph(navController))
                     }

@@ -47,6 +47,7 @@ android {
 
 composeCompiler {
     reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    metricsDestination = layout.buildDirectory.dir("compose_compiler")
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
 }
 
@@ -102,7 +103,9 @@ dependencies {
     implementation ("com.squareup.moshi:moshi-kotlin:$moshiVer")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVer")
 
-    implementation ("androidx.paging:paging-runtime-ktx:3.3.6")
+    val pagingVer = "3.3.6"
+    implementation ("androidx.paging:paging-runtime-ktx:$pagingVer")
+    implementation ("androidx.paging:paging-compose:$pagingVer")
 
     // Test
     testImplementation ("junit:junit:4.13.2")
