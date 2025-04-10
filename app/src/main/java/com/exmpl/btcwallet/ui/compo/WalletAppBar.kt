@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -83,9 +86,13 @@ fun WalletAppBar(balance: State<String>, isProgress: State<Boolean>, navControll
     ) {
         Column(
             Modifier
-                .padding(top = 16.dp, )
+                //.padding(top = 16.dp, )
                 .fillMaxWidth()
         ) {
+            Text(stringResource(R.string.btc_wallet),
+                fontSize = 18.sp)
+
+            // Bitcoin wallet
 
             Text(textAlign = TextAlign.Center,
                 text = stringResource(R.string.balance),
@@ -120,12 +127,26 @@ fun WalletAppBar(balance: State<String>, isProgress: State<Boolean>, navControll
             }
 
             var selectedTab by remember { mutableIntStateOf(0) }
+            var tabRowWidth by remember { mutableIntStateOf(0) }
 
             PrimaryTabRow(
                 selectedTab,
+                contentColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .padding(top = 20.dp, start = 16.dp, end = 16.dp)
+                    .padding(top = 26.dp)
+                    //.padding(top = 20.dp, start = 16.dp, end = 16.dp)
                     //.height(20.dp)
+                    .onGloballyPositioned { layoutCoordinates ->
+                        tabRowWidth = layoutCoordinates.size.width
+                    },
+                indicator = {
+                    TabRowDefaults.PrimaryIndicator(
+                        width = (tabRowWidth / 2.5 / LocalDensity.current.density).dp,
+                        color = Color.White,
+                        modifier = Modifier.tabIndicatorOffset(selectedTab)
+                    )
+                }
             ) {
                 Tab(
                     selected = selectedTab == 0,

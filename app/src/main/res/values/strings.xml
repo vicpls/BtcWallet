@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BtcWallet</string>
     <string name="action_history">History</string>
+    <string name="btc_wallet">Bitcoin wallet</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="fr_balance">  Bitcoin wallet</string>
