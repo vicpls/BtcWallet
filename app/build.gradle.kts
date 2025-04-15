@@ -53,11 +53,12 @@ composeCompiler {
 
 dependencies {
 
-    val composeBom = platform("androidx.compose:compose-bom:2025.03.00")
+    val composeBom = platform("androidx.compose:compose-bom:2025.04.00")
     implementation(composeBom)
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose")
     debugImplementation("androidx.compose.ui:ui-tooling")
     // Optional - Integration with activities
     implementation("androidx.activity:activity-compose:1.10.1")
@@ -65,7 +66,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation ("androidx.navigation:navigation-compose")
 
-    implementation ("androidx.core:core-ktx:1.15.0")
+    implementation ("androidx.core:core-ktx:1.16.0")
     implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("com.google.android.material:material:1.12.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.2.1")

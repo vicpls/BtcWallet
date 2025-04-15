@@ -7,8 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.exmpl.btcwallet.LOG_TAG
-import com.exmpl.btcwallet.model.IUseCases
-import com.exmpl.btcwallet.model.Result
+import com.exmpl.btcwallet.data.Result
+import com.exmpl.btcwallet.domain.IUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
