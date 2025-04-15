@@ -21,8 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.exmpl.btcwallet.R
+import com.exmpl.btcwallet.data.Result
 import com.exmpl.btcwallet.databinding.BalanceFragmentBinding
-import com.exmpl.btcwallet.model.Result
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 

@@ -10,7 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.exmpl.btcwallet.R
 import com.exmpl.btcwallet.databinding.ActivityMainBinding
-import com.exmpl.btcwallet.ui.compo.MainActivityScreen
+import com.exmpl.btcwallet.ui.composable.MainActivityScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

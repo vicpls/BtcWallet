@@ -5,3 +5,5 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class App: Application()
+
+const val LOG_TAG = "BtcWallet"

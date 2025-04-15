@@ -10,8 +10,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.exmpl.btcwallet.R
+import com.exmpl.btcwallet.data.TransactionViewInfo
 import com.exmpl.btcwallet.databinding.HistoryItemBinding
-import com.exmpl.btcwallet.presenter.TransactionViewInfo
 
 
 class TxInfoAdapter(

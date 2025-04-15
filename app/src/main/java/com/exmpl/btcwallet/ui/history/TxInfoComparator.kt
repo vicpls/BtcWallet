@@ -1,7 +1,7 @@
 package com.exmpl.btcwallet.ui.history
 
 import androidx.recyclerview.widget.DiffUtil
-import com.exmpl.btcwallet.presenter.TransactionViewInfo
+import com.exmpl.btcwallet.data.TransactionViewInfo
 
 object TxInfoComparator : DiffUtil.ItemCallback<TransactionViewInfo>() {
 
