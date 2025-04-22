@@ -6,27 +6,11 @@ import org.bitcoinj.core.ECKey
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val PrvKey = "PrvKey"
-private const val PubKey = "PubKey"
-private const val PRIVATE_KEY = "cNUAYZrU2VJVpPy9itdm1kFJu2yraHAocRmCGsXGmaJjhHoA4jAy"
+private const val PRIVATE_KEY = "cRJFohiA6QFPoCZsn339dMrjCqgoFv3VkbNGbp5hi4YmVqoJvWwG"
 
 @Singleton
 class Key
 @Inject constructor(lStore: ILocalStore) {
 
     val ecKey: ECKey = DumpedPrivateKey.fromBase58(netParams, PRIVATE_KEY).key
-
-    init {
-
-        /*val prvK = lStore.getByteArr(PrvKey)
-        val pubK = lStore.getByteArr(PubKey)
-
-        if (prvK != null && pubK != null) {
-            ecKey = ECKey.fromPrivateAndPrecalculatedPublic(prvK, pubK)
-        } else {
-            ecKey = ECKey()
-            lStore.put(PrvKey, ecKey.privKeyBytes)
-            lStore.put(PubKey, ecKey.pubKey)
-        }*/
-    }
 }

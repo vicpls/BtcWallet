@@ -91,13 +91,13 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
 
     //          Hilt
-    val hiltVer = "2.56"
+    val hiltVer = "2.56.1"
     implementation ("com.google.dagger:hilt-android:$hiltVer")
     ksp ("com.google.dagger:hilt-compiler:$hiltVer")
 //    kapt ("com.google.dagger:hilt-compiler:$hiltVer")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    implementation ("org.bitcoinj:bitcoinj-core:0.16.2")
+    implementation ("org.bitcoinj:bitcoinj-core:0.16.5")
 
     // Moshi
     val moshiVer = "1.15.2"
